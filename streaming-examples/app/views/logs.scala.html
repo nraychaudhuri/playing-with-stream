@@ -1,0 +1,21 @@
+@(message: String)(implicit req: RequestHeader)
+
+@main("Event Source demo - Streaming log messages") {
+    <h2>Event Source demo - Streaming log messages</h2>
+    <div id="events"></div>
+
+    <script type="text/javascript" charset="utf-8">
+
+    //var feed = new WebSocket('@routes.StreamingLogEvents.websocket().webSocketURL()')
+    var feed = new EventSource('@routes.StreamingLogEvents.es')
+    feed.onmessage = function(e) {
+    console.log(e.data)
+    var data = JSON.parse(e.data)
+    var line = $('<p></p>');
+    line.text(data.message);
+    line.addClass(data.type);
+    $("#events").prepend(line);
+    }
+    </script>
+
+}

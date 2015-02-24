@@ -1,0 +1,16 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+#Streaming ticks examples
+GET        /ticks                   controllers.StreamingTicks.index
+GET        /streaming/events        controllers.StreamingTicks.events
+
+#Streaming log events
+
+GET        /logs                    controllers.StreamingLogEvents.index
+GET        /logs/es                 controllers.StreamingLogEvents.es
+GET        /logs/ws                 controllers.StreamingLogEvents.websocket
+
+# Map static resources from the /public folder to the /assets URL path
+GET        /assets/*file            controllers.Assets.at(path="/public", file)
