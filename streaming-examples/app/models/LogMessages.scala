@@ -8,10 +8,14 @@ object LogMessages {
 
   def asSource: Source[String] = {
     def nextMessage(): String = {
-      if(Random.nextBoolean)
+      if(Random.nextBoolean) {
         "[INFO] - some info log message"
-      else
-        "[DEBUG] - some debug log message"
+      } else {
+        if(Random.nextBoolean())
+          "[DEBUG] - some debug log message"
+        else
+          "junk message"
+      }
     }
     import scala.concurrent.duration._
 

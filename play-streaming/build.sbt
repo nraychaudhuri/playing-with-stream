@@ -1,7 +1,7 @@
-import play.PlayImport.PlayKeys._
+//import play.PlayImport.PlayKeys._
 import play.twirl.sbt.Import.TwirlKeys._
 
-name := "pagelets"
+name := "pagelets-java"
 
 version := "1.0-SNAPSHOT"
 
@@ -15,8 +15,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-stream-experimental" % "1.0-M2"
 )
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
-templateFormats := templateFormats.value + ("pagelet" -> "util.PageletFormat")
+//templateFormats := templateFormats.value + ("pagelet" -> "util.PageletFormat")
 
 templateImports += "util.Pagelet"

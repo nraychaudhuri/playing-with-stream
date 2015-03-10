@@ -2,7 +2,7 @@ package controllers
 
 import actors.LogStreamingActor
 import akka.stream.FlowMaterializer
-import akka.stream.scaladsl.{Source, Sink}
+import akka.stream.scaladsl.{OperationAttributes, Source, Sink}
 import models.LogMessages
 import play.api.libs.EventSource.Event
 import play.api.libs.concurrent.Akka
@@ -22,22 +22,18 @@ import play.api.Play.current
 
 object StreamingLogEvents extends Controller {
 
-  def index = Action.async { implicit req =>
-    Future {
-      Ok(views.html.logs("Your new application is ready."))
-    }
+  def index = Action { implicit req =>
+    Ok(views.html.logs("Your new application is ready."))
   }
 
   def es = Action {
-    val newSource: Source[JsValue] = LogMessages.asSource.map(toEvent).map(asJson)
+    val newSource: Source[JsValue] = LogMessages.asSource
+      .map(toEvent)
+      .map(asJson)
+
     Ok.chunked(toEventSource(newSource)).as(MimeTypes.EVENT_STREAM)
   }
   
-  def websocket = WebSocket.acceptWithActor[String, JsValue] { request => out =>
-    val source: Source[JsValue] = LogMessages.asSource.map(toEvent).map(asJson)
-    LogStreamingActor.props(out, source)
-  }
-
   val logPattern = """\[(INFO|DEBUG)\] - ([a-z ]*)""".r
 
   val toEvent: String => LogEvent = line => {
@@ -74,6 +70,11 @@ object StreamingLogEvents extends Controller {
         Future(next)
       }
     }
+  }
+
+  def websocket = WebSocket.acceptWithActor[String, JsValue] { request => out =>
+    val source: Source[JsValue] = LogMessages.asSource.map(toEvent).map(asJson)
+    LogStreamingActor.props(out, source)
   }
 
 }

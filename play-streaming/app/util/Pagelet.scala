@@ -11,20 +11,6 @@ object Pagelet {
 }
 
 case class Pagelet(e: Source[Html]) extends play.twirl.api.Appendable[Pagelet]  {
-
-  def toChunkedStream: Enumerator[Html] = Bridge.sourceToEnumerator(e)
-  def andThen(another: Pagelet): Pagelet = Pagelet(e.concat(another.e))
-}
-
-object PageletFormat extends play.twirl.api.Format[Pagelet] {
-  
-  override def raw(text: String): Pagelet = Pagelet(HtmlFormat.raw(text))
-
-  override def escape(text: String): Pagelet = Pagelet(HtmlFormat.escape(text))
-
-  override def empty: Pagelet = Pagelet(HtmlFormat.empty)
-
-  override def fill(elements: Seq[Pagelet]): Pagelet = elements.reduceLeft(_.andThen(_))
 }
 
 

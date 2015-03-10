@@ -17,22 +17,10 @@ object Application extends Controller {
 
     val stream = interleave(wpasam, symbi, ads, wyfau)
     
-    Ok.chunked(views.pagelet.index(stream).toChunkedStream)
+    Ok("")
   }
 
-  private def interleave(modules: Source[Html]*): Pagelet = {
-    val source = Source[Html]() { implicit builder =>
-      val merge = Merge[Html]
-      val sink = UndefinedSink[Html]
-      for(m <- modules) {
-        builder.addEdge(m, merge)
-      }
-      builder.addEdge(merge, sink)
-      
-      sink
-    }
-    Pagelet(source)
-  }
+  private def interleave(modules: Source[Html]*): Pagelet = ???
 
   private def toModule(moduleId: String, html: Future[Html]): Source[Html] = {
     import views.html.modules.module

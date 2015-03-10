@@ -8,7 +8,7 @@ import play.api.libs.json.Json
 import scala.concurrent.duration._
 import scala.util.Random
 
-object EventStream {
+object TickStream {
   
   def droppySink[T](s: Sink[T]): Sink[T] = {
     Flow[T].buffer(2, OverflowStrategy.dropHead).to(s)
@@ -27,7 +27,7 @@ object EventStream {
    val graph = FlowGraph { implicit builder =>
      val bcast = Broadcast[Int]
      rawStream ~> bcast
-     bcast ~> fastSink
+     bcast ~> droppySink(fastSink)
      bcast ~> droppySink(slowSink)
    }
 
